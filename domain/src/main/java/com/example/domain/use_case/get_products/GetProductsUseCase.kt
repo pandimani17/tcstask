@@ -16,7 +16,7 @@ class GetProductsUseCase @Inject constructor(
         try {
             emit(Resource.Loading())
             val products = repository.getProducts()
-            val sortedlist: List<Product> = products.sortedBy { it.title?.toString() }
+            val sortedlist: List<Product> = products.sortedBy { it.title.toString() }
             emit(Resource.Success(sortedlist))
         }catch (e: IOException){
             emit(Resource.Error("check your internet"))
