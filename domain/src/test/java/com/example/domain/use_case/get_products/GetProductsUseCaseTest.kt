@@ -13,12 +13,13 @@ import org.junit.jupiter.api.Test
 
 class GetProductsUseCaseTest {
 
-private lateinit var getProducts :GetProductsUseCase
-    private lateinit var fakeRepository :FakeProductRepository
+    private  var fakeRepository :FakeProductRepository = FakeProductRepository()
+    private  var getProducts :GetProductsUseCase = GetProductsUseCase(fakeRepository)
 
 
 
-@Before
+
+    @Before
 fun setup(){
     fakeRepository = FakeProductRepository()
     getProducts = GetProductsUseCase(fakeRepository)
@@ -45,11 +46,12 @@ fun setup(){
 }
 
     @Test
-    fun `order by alphabtes`() = runBlocking {
-        val products = getProducts()
+    fun `check count of products`(): Unit = runBlocking {
+        val products = getProducts
         val expectecd = 26
-        val numberOfProducts =products.toList()
-        assertThat(expectecd.equals(numberOfProducts.size))
+        val numberOfProducts =products.invoke()
+        val list = numberOfProducts.toList()
+        assertThat(expectecd == list.size)
 
     }
 
