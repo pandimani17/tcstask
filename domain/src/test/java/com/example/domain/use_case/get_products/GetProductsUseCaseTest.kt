@@ -1,5 +1,6 @@
 package com.example.domain.use_case.get_products
 
+import com.example.domain.common.Resource
 import com.example.domain.data.repository.FakeProductRepository
 import com.example.domain.model.Product
 import com.google.common.truth.Truth.assertThat
@@ -7,20 +8,22 @@ import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GetProductsUseCaseTest {
 
-    private  var fakeRepository :FakeProductRepository = FakeProductRepository()
-    private  var getProducts :GetProductsUseCase = GetProductsUseCase(fakeRepository)
+    private lateinit var fakeRepository :FakeProductRepository
+    private lateinit var getProducts :GetProductsUseCase
 
 
 
 
-    @Before
-fun setup(){
+    @BeforeAll
+    fun setup(){
     fakeRepository = FakeProductRepository()
     getProducts = GetProductsUseCase(fakeRepository)
 
@@ -45,14 +48,16 @@ fun setup(){
 
 }
 
-    @Test
-    fun `check count of products`(): Unit = runBlocking {
-        val products = getProducts
-        val expectecd = 26
-        val numberOfProducts =products.invoke()
-        val list = numberOfProducts.toList()
-        assertThat(expectecd == list.size)
 
+    @Test
+    fun `check null`(): Unit = runBlocking {
+        val products = getProducts
+        val flow = products.invoke()
+        flow.collect { result: Resource<List<Product>> ->
+            result.data?.forEach{
+                assertThat(it).isNotNull()
+            }
+            }
+        }
     }
 
-}
