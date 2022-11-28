@@ -12,13 +12,13 @@ import javax.inject.Inject
 class GetProductsUseCase @Inject constructor(
     private val repository: ProductRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<Product>>> =flow{
+    operator fun invoke(): Flow<Resource<List<Product>>> = flow {
         try {
             emit(Resource.Loading())
             val products = repository.getProducts()
             val sortedlist: List<Product> = products.sortedBy { it.title.toString() }
             emit(Resource.Success(sortedlist))
-        }catch (e: IOException){
+        } catch (e: IOException) {
             emit(Resource.Error("check your internet"))
         }
     }

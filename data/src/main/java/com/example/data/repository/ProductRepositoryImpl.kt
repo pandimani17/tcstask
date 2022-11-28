@@ -11,7 +11,7 @@ class ProductRepositoryImpl @Inject constructor(
 ) : ProductRepository {
     override suspend fun getProducts(): List<Product> {
 
-        return api.getProducts().map{it.toProduct() }
+        return api.getProducts().map { it.toProduct() }
     }
 
     override suspend fun insertProducts(product: Product) {

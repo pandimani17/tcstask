@@ -19,7 +19,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideProductsApi() : ProductsApi {
+    fun provideProductsApi(): ProductsApi {
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -28,7 +28,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideProductRepository(api: ProductsApi) : ProductRepository{
+    fun provideProductRepository(api: ProductsApi): ProductRepository {
         return ProductRepositoryImpl(api)
 
     }

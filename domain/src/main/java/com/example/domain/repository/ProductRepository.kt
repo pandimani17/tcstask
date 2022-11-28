@@ -4,8 +4,8 @@ import com.example.domain.model.Product
 
 interface ProductRepository {
 
-    suspend fun getProducts():List<Product>
+    suspend fun getProducts(): List<Product>
 
-    suspend fun insertProducts(product : Product)
+    suspend fun insertProducts(product: Product)
 
 }

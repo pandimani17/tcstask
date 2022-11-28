@@ -16,37 +16,36 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GetProductsUseCaseTest {
 
-    private lateinit var fakeRepository :FakeProductRepository
-    private lateinit var getProducts :GetProductsUseCase
-
-
+    private lateinit var fakeRepository: FakeProductRepository
+    private lateinit var getProducts: GetProductsUseCase
 
 
     @BeforeAll
-    fun setup(){
-    fakeRepository = FakeProductRepository()
-    getProducts = GetProductsUseCase(fakeRepository)
+    fun setup() {
+        fakeRepository = FakeProductRepository()
+        getProducts = GetProductsUseCase(fakeRepository)
 
-    val productToInsert = mutableListOf<Product>()
-    ('a'..'z').forEachIndexed { index, c ->
-        productToInsert.add(
-            Product(
-                id = index,
-                title = c.toString(),
-                price = 0.4,
-                description = c.toString(),
-                category = c.toString(),
-                image = c.toString()
+        val productToInsert = mutableListOf<Product>()
+        ('a'..'z').forEachIndexed { index, c ->
+            productToInsert.add(
+                Product(
+                    id = index,
+                    title = c.toString(),
+                    price = 0.4,
+                    description = c.toString(),
+                    category = c.toString(),
+                    image = c.toString()
+                )
             )
-        )
+
+        }
+        productToInsert.shuffle()
+
+        runBlocking {
+            productToInsert.forEach { fakeRepository.insertProducts(it) }
+        }
 
     }
-    productToInsert.shuffle()
-
-    runBlocking {     productToInsert.forEach { fakeRepository.insertProducts(it) }
-    }
-
-}
 
 
     @Test
@@ -54,10 +53,10 @@ class GetProductsUseCaseTest {
         val products = getProducts
         val flow = products.invoke()
         flow.collect { result: Resource<List<Product>> ->
-            result.data?.forEach{
+            result.data?.forEach {
                 assertThat(it).isNotNull()
-            }
             }
         }
     }
+}
 

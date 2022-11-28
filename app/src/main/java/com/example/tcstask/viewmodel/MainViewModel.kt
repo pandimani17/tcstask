@@ -16,27 +16,27 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase
-)  : ViewModel(){
+) : ViewModel() {
     private val _state = MutableLiveData<ProductListState>()
-    val state :  LiveData<ProductListState> = _state
+    val state: LiveData<ProductListState> = _state
 
     init {
         getProducts()
     }
 
-    private fun getProducts(){
+    private fun getProducts() {
         getProductsUseCase().onEach { result ->
-  when(result){
-    is Resource.Success ->{
-        _state.value = ProductListState(products = result.data ?: emptyList())
-    }
-      is Resource.Error ->{
-          _state.value = ProductListState(error = result.message ?:"unexpected error")
-      }
-      is Resource.Loading ->{
-          _state.value = ProductListState(true)
-      }
-  }
+            when (result) {
+                is Resource.Success -> {
+                    _state.value = ProductListState(products = result.data ?: emptyList())
+                }
+                is Resource.Error -> {
+                    _state.value = ProductListState(error = result.message ?: "unexpected error")
+                }
+                is Resource.Loading -> {
+                    _state.value = ProductListState(true)
+                }
+            }
         }.launchIn(viewModelScope)
     }
 
